@@ -14,16 +14,16 @@ impl Node {
     pub fn print(&self) {
         println!("{}", self.val);
 
-        match &self.next {
+        match self.next {
             None => {},
-            Some(n) => n.print()
+            Some(ref n) => n.print()
         }
     }
 
     pub fn append(&mut self, new_value: i32) {
-        match &mut self.next {
+        match self.next {
             None => self.next = Some(Box::new(Node::new(new_value))),
-            Some(n) => n.append(new_value),
+            Some(ref mut n) => n.append(new_value),
         }
     }
 }
