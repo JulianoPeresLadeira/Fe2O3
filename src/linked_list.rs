@@ -10,32 +10,53 @@ impl Node {
             next: None
         }
     }
+}
 
-    pub fn print(&self) {
-        println!("{}", self.val);
+struct LinkedList {
+    length: u32,
+    head: Option<Box<Node>>
+}
 
-        match self.next {
-            None => {},
-            Some(ref n) => n.print()
+impl LinkedList {
+    pub fn new() -> Self {
+        Self {
+            length: 0,
+            head: None
         }
     }
 
-    pub fn append(&mut self, new_value: i32) {
-        match self.next {
-            None => self.next = Some(Box::new(Node::new(new_value))),
-            Some(ref mut n) => n.append(new_value),
+    pub fn append(&mut self, value: i32) {
+        match self.head {
+            None => self.head = Some(Box::new(Node::new(value))),
+            Some(ref mut n) => {
+                let mut curr: &mut Node = n.as_mut();
+                while curr.next.is_some() {
+                    let curr_box = curr.next.as_mut().unwrap();
+                    curr = curr_box.as_mut();
+                }
+                curr.next = Some(Box::new(Node::new(value)))
+            },
+        }
+
+        self.length += 1;
+    }
+
+    pub fn print(&self) {
+        let mut curr = &self.head;
+        while curr.is_some() {
+            let curr_node = curr.as_ref().unwrap();
+            println!("{}", curr_node.val);
+            curr = &curr_node.next;
         }
     }
 }
 
 fn main() {
-    let mut x = Node::new(1);
-    x.append(2);
-    x.append(3);
-    x.append(4);
-    x.append(5);
-    x.append(6);
-    x.append(7);
-    x.append(8);
-    x.print();
+    let mut list = LinkedList::new();
+    list.append(1);
+    list.append(2);
+    list.append(3);
+    list.append(4);
+    list.append(5);
+    list.print();
 }
